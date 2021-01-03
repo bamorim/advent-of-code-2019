@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/bamorim/advent-of-code-2019/day1"
+	"github.com/bamorim/advent-of-code-2019/day2"
 )
 
 func check(e error) {
@@ -17,7 +18,7 @@ func check(e error) {
 
 func main() {
 	// By default, runs last day
-	day := 1
+	day := 2
 
 	if len(os.Args) > 1 {
 		parsed, err := strconv.Atoi(os.Args[1])
@@ -32,6 +33,8 @@ func main() {
 	switch day {
 	case 1:
 		day1.Run(bytes)
+	case 2:
+		day2.Run(bytes)
 	default:
 		fmt.Println("Invalid Day")
 	}
