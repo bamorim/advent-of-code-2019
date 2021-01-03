@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"strconv"
-	"strings"
+
+	"github.com/bamorim/advent-of-code-2019/day1"
 )
 
 func check(e error) {
@@ -13,59 +15,24 @@ func check(e error) {
 	}
 }
 
-func fuelFor(mass int64) (fuel int64) {
-	fuel = mass/3 - 2
-	return
-}
-
-func fuelForModule(mass int64) (totalFuel int64) {
-	fuel := fuelFor(mass)
-	totalFuel = fuel
-
-	for fuel != 0 {
-		fuel = fuelFor(fuel)
-		if fuel < 0 {
-			fuel = 0
-		}
-		totalFuel = totalFuel + fuel
-	}
-
-	return
-}
-
 func main() {
-	// Read File
-	bytes, err := ioutil.ReadFile("./inputs/1.txt")
+	// By default, runs last day
+	day := 1
+
+	if len(os.Args) > 1 {
+		parsed, err := strconv.Atoi(os.Args[1])
+		check(err)
+		day = parsed
+	}
+
+	filename := fmt.Sprintf("./day%d/input.txt", day)
+	bytes, err := ioutil.ReadFile(filename)
 	check(err)
-
-	// Parse input
-	input := string(bytes)
-	lines := strings.Split(input, "\n")
-	masses := []int64{}
-	for _, line := range lines {
-		mass, err := strconv.Atoi(line)
-		// Last line might be empty so let's just ignore it
-		if err != nil {
-			continue
-		}
-		masses = append(masses, int64(mass))
+	fmt.Println(os.Args)
+	switch day {
+	case 1:
+		day1.Run(bytes)
+	default:
+		fmt.Println("Invalid Day")
 	}
-
-	// Get Solution for Part 1
-	var part1 int64 = 0
-
-	for _, mass := range masses {
-		part1 = part1 + fuelFor(mass)
-	}
-
-	fmt.Println(part1)
-
-	// Get Solution for Part 2
-	var part2 int64 = 0
-
-	for _, mass := range masses {
-		part2 = part2 + fuelForModule(mass)
-	}
-
-	fmt.Println(part2)
 }
