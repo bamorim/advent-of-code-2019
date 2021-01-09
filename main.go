@@ -8,6 +8,7 @@ import (
 
 	"github.com/bamorim/advent-of-code-2019/day1"
 	"github.com/bamorim/advent-of-code-2019/day2"
+	"github.com/bamorim/advent-of-code-2019/day3"
 )
 
 func check(e error) {
@@ -35,6 +36,8 @@ func main() {
 		day1.Run(bytes)
 	case 2:
 		day2.Run(bytes)
+	case 3:
+		day3.Run(bytes)
 	default:
 		fmt.Println("Invalid Day")
 	}

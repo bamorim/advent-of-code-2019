@@ -11,7 +11,7 @@ func Run(bytes []byte) {
 	parsed := parse(bytes)
 
 	part1 := part1(parsed)
-	fmt.Printf("Day 1 - Part 1: ")
+	fmt.Printf("Day 2 - Part 1: ")
 	fmt.Println(part1[0])
 
 	part2 := part2(parsed)
