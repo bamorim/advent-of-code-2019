@@ -27,7 +27,11 @@ type input struct {
 
 type pos [2]int
 
-type f func() f
+type intersection struct {
+	pos    pos
+	steps1 int
+	steps2 int
+}
 
 // Run runs day 3
 func Run(bytes []byte) {
@@ -73,23 +77,11 @@ func parseWire(line string) (result wire) {
 }
 
 func part1(parsed input) (minDistance int) {
-	visited := map[pos]bool{}
-	intersections := []pos{}
 	center := [2]int{0, 0}
-
-	traverse(parsed.wire1, func(p pos, _ int) {
-		visited[p] = true
-	})
-
-	traverse(parsed.wire2, func(p pos, _ int) {
-		value, _ := visited[p]
-		if value {
-			intersections = append(intersections, p)
-		}
-	})
+	intersections := getIntersections(parsed.wire1, parsed.wire2)
 
 	for _, intersection := range intersections {
-		distance := manhattanDistance(intersection, center)
+		distance := manhattanDistance(intersection.pos, center)
 		if minDistance == 0 || minDistance > distance {
 			minDistance = distance
 		}
@@ -98,28 +90,37 @@ func part1(parsed input) (minDistance int) {
 }
 
 func part2(parsed input) (minSteps int) {
+	intersections := getIntersections(parsed.wire1, parsed.wire2)
+
+	for _, intersection := range intersections {
+		combinedSteps := intersection.steps1 + intersection.steps2
+		if minSteps == 0 || minSteps > combinedSteps {
+			minSteps = combinedSteps
+		}
+	}
+
+	return
+}
+
+func getIntersections(wire1 wire, wire2 wire) (intersections []intersection) {
 	stepsForWire1 := map[pos]int{}
 	visitedByWire2 := map[pos]bool{}
 
-	traverse(parsed.wire1, func(p pos, steps int) {
+	traverse(wire1, func(p pos, steps int) {
 		_, found := stepsForWire1[p]
 		if !found {
 			stepsForWire1[p] = steps
 		}
 	})
 
-	traverse(parsed.wire2, func(p pos, steps2 int) {
+	traverse(wire2, func(p pos, steps2 int) {
 		steps1, alreadyVisitedByWire1 := stepsForWire1[p]
 		_, alreadyVisitedByWire2 := visitedByWire2[p]
 		if alreadyVisitedByWire1 && !alreadyVisitedByWire2 {
-			combinedSteps := steps1 + steps2
-			if minSteps == 0 || minSteps > combinedSteps {
-				minSteps = combinedSteps
-			}
+			intersections = append(intersections, intersection{p, steps1, steps2})
 		}
 		visitedByWire2[p] = true
 	})
-
 	return
 }
 
